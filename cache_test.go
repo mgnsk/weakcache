@@ -13,6 +13,7 @@ func TestGCKeepAlive(t *testing.T) {
 	g := NewWithT(t)
 
 	cache := weakcache.New(10 * time.Millisecond)
+	defer cache.Close()
 
 	rec, _ := cache.Fetch("key", 0, 0, func() (interface{}, error) {
 		return "value", nil
@@ -35,6 +36,7 @@ func TestGCEviction(t *testing.T) {
 	g := NewWithT(t)
 
 	cache := weakcache.New(10 * time.Millisecond)
+	defer cache.Close()
 
 	// Fetch an item with 0 minTTL and 0 maxTTL.
 	rec, _ := cache.Fetch("key", 0, 0, func() (interface{}, error) {
@@ -63,6 +65,7 @@ func TestMinTTL(t *testing.T) {
 	// minTTL specifies how long the item will survive being unreferenced.
 
 	cache := weakcache.New(10 * time.Millisecond)
+	defer cache.Close()
 
 	// Fetch an item with minTTL set.
 	rec1, _ := cache.Fetch("key", 100*time.Millisecond, 0, func() (interface{}, error) {
@@ -111,6 +114,7 @@ func TestMaxTTL(t *testing.T) {
 	g := NewWithT(t)
 
 	cache := weakcache.New(10 * time.Millisecond)
+	defer cache.Close()
 
 	// Fetch an item with minTTL set.
 	rec1, _ := cache.Fetch("key", 0, 100*time.Millisecond, func() (interface{}, error) {
