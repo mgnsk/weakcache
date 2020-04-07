@@ -9,29 +9,6 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func TestGCKeepAlive(t *testing.T) {
-	g := NewWithT(t)
-
-	cache := weakcache.New(10 * time.Millisecond)
-	defer cache.Close()
-
-	rec, _ := cache.Fetch("key", 0, 0, func() (interface{}, error) {
-		return "value", nil
-	})
-
-	g.Expect(rec.Value).To(Equal("value"))
-
-	g.Expect(cache.Len()).To(Equal(1))
-
-	runtime.GC()
-
-	// Record still exists since it's reachable.
-	g.Expect(cache.Len()).To(Equal(1))
-
-	// Make the record reachable.
-	runtime.KeepAlive(rec)
-}
-
 func TestGCEviction(t *testing.T) {
 	g := NewWithT(t)
 
