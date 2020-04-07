@@ -1,4 +1,4 @@
-module weakcache
+module github.com/mgnsk/weakcache
 
 go 1.14
 

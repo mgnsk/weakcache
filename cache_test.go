@@ -4,8 +4,8 @@ import (
 	"runtime"
 	"testing"
 	"time"
-	"weakcache"
 
+	"github.com/mgnsk/weakcache"
 	. "github.com/onsi/gomega"
 )
 
