@@ -1,3 +1,4 @@
+// Package weakcache is weak cache implementation using finalizers and reference counting.
 package weakcache
 
 import (
@@ -44,7 +45,7 @@ type Cache struct {
 	quit        chan struct{}
 }
 
-// New creates an empty cache.
+// New creates an empty cache with specified GC interval.
 func New(gcInterval time.Duration) *Cache {
 	c := &Cache{
 		gcInterval:  gcInterval,
