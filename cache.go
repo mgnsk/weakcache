@@ -163,13 +163,13 @@ func (c *Cache) fetch(index uint64, minTTL, maxTTL time.Duration, fetch fetch) (
 	rec.refs++
 
 	// Store a value in the map. The pointer is returned only to the caller
-	// so that the caller triggers a finalizer when the pointer becomes unreachable.
+	// so that the caller triggers a finalizer when the pointer is garbage collected.
 	c.reachable[index] = *rec
 
 	return rec, nil
 }
 
-// unref is called when a reference to a cache record gets garbage collected.
+// unref is called when a pointer to a cache record gets garbage collected.
 func (c *Cache) unref(index uint64) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
@@ -177,17 +177,17 @@ func (c *Cache) unref(index uint64) {
 	rec, ok := c.reachable[index]
 	if !ok {
 		// The record probably expired during fetch
-		// while having other live references.
+		// while having other live pointers.
 		return
 	}
 
 	// Decrease reference count for the record.
 	rec.refs--
 	if rec.refs > 0 {
-		// Record has other live references.
+		// Record has other live pointers.
 		c.reachable[index] = rec
 	} else {
-		// No references, move to unreachable map.
+		// No pointers, move to unreachable map.
 		delete(c.reachable, index)
 		// Mark the last unref time so that the record would survive
 		// being unreachable until at least minTTL duration has passed.
