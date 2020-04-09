@@ -21,7 +21,7 @@ type Record struct {
 // has been unreferenced for too long.
 func (r Record) isExpired(now int64) bool {
 	// The record has not been referenced for at least r.minTTL duration.
-	if r.lastUnref > 0 && r.lastUnref+int64(r.minTTL) < now {
+	if r.lastUnref > 0 && r.lastUnref+r.minTTL < now {
 		return true
 	}
 	if r.expires > 0 && r.expires < now {
